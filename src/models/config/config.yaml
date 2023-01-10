@@ -1,0 +1,3 @@
+defaults: 
+  - training: exp1
+  - model: FFNN

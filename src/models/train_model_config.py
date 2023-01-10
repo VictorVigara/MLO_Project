@@ -12,35 +12,51 @@ from torch import optim
 from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 
+import hydra
+from omegaconf import OmegaConf
 
-@click.group()
-def cli():
-    pass
+import logging
 
 
-@click.command()
-@click.option("--lr", default=1e-3, help='learning rate to use for training')
-@click.option("--ep", default=4, help='epochs for training')
-@click.option("--bs", default=32, help='batch size')
-def train(lr, bs, ep):
-    ''' Train function load tensors from data/processed and train a network 
+
+@hydra.main(config_path='config', config_name='config')
+def train(config):
+    ''' load tensors from data/processed and train a network 
         defined in models.py.  At the end some figures are generated with the results'''
 
-    print("Starting training")
-    print(f"Learning rate: {lr}  Batch size: {bs}  Epochs: {ep}")
-    curr_dir = os.getcwd()
+    log = logging.getLogger(__name__)
 
+    # Print loaded parameters
+    log.info(f'Training configuration:\n {OmegaConf.to_yaml(config.training)}')
+    log.info(f'Model configuration:\n {OmegaConf.to_yaml(config.model)}')
+
+    train_params = config.training
+    lr = train_params.learning_rate
+    bs = train_params.batch_size
+    ep = train_params.epochs
+
+    model_params = config.model
+    in_feat = model_params.input_features
+    n_h_0 = model_params.n_hidden_0
+    n_h_1 = model_params.n_hidden_1
+    n_h_2 = model_params.n_hidden_2
+    out_feat = model_params.out_features
+
+    log.info("Starting training")
+   
+    curr_dir = os.getcwd()
+    print(curr_dir)
     # Path to data
-    data_path = "data/processed/"
+    project_dir = "C:\\Users\\victo\\OneDrive\\Escritorio\\DTU\\Machine_Learning_Operations\\MLO_Project\\"
 
     # Define model
-    model = Net(784, [256, 132, 100], 10)
+    model = Net(in_feat, [n_h_0, n_h_1, n_h_2], out_feat)
     # Load train and test data
-    train_imgs = torch.load(data_path+'train_images.pt')
-    train_labels = torch.load(data_path+'train_labels.pt')
+    train_imgs = torch.load(project_dir+'data/processed/train_images.pt')
+    train_labels = torch.load(project_dir+'data/processed/train_labels.pt')
 
-    test_imgs = torch.load(data_path+'test_images.pt')
-    test_labels = torch.load(data_path+'test_labels.pt')
+    test_imgs = torch.load(project_dir+'data/processed/test_images.pt')
+    test_labels = torch.load(project_dir+'data/processed/test_labels.pt')
 
     # Define normalization
     transform = transforms.Normalize((0,), (1,))
@@ -117,13 +133,13 @@ def train(lr, bs, ep):
         test_batch_acc = metrics.accuracy_score(test_targs, test_preds)
         test_acc.append(test_batch_acc)
         
-        print(f"Epoch {e+1} Train Loss =  {train_batch_loss}  Train Acc = {train_batch_acc} Test Loss  =  {test_batch_loss}  Test Acc  = {test_batch_acc}")
-        print("--------------------------------------------------------------------------")
+        log.info(f"Epoch {e+1} Train Loss =  {train_batch_loss}  Train Acc = {train_batch_acc} Test Loss  =  {test_batch_loss}  Test Acc  = {test_batch_acc}")
+        log.info("--------------------------------------------------------------------------")
 
         # Save best model (lowest test loss)
         if test_batch_loss > best_test_loss: 
             best_test_loss = test_batch_loss
-            save_dir = "models/best_checkpoint.pth"
+            save_dir = project_dir+"models/best_checkpoint.pth"
             torch.save(model.state_dict(), save_dir)
     
     plt.figure()
@@ -131,14 +147,14 @@ def train(lr, bs, ep):
     plt.legend(['Train Loss','Test Loss'])
     plt.xlabel('Updates'), plt.ylabel('Loss')
     plt.title('Loss')
-    plt.savefig('reports/figures/loss.png')
+    plt.savefig(project_dir+'reports/figures/loss.png')
 
     plt.figure()
     plt.plot(range(ep), train_acc, 'b', test_acc, 'r')
     plt.legend(['Train Accuracy','Test Accuracy'])
     plt.xlabel('Updates'), plt.ylabel('Accuracy')
     plt.title('Accuracy')
-    plt.savefig('reports/figures/accuracy.png')
+    plt.savefig(project_dir+'reports/figures/accuracy.png')
 
 class MyDataset(Dataset): 
     def __init__(self, images, labels, transform):
@@ -158,8 +174,6 @@ class MyDataset(Dataset):
 
         return image, label
 
-cli.add_command(train)
 
 if __name__ == '__main__': 
-    cli()
     train()

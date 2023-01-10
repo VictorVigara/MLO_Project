@@ -1,0 +1,6 @@
+# @package _group_
+input_features: 784
+n_hidden_0: 256
+n_hidden_1: 132
+n_hidden_2: 100
+out_features: 10
