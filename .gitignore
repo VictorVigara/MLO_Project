@@ -94,3 +94,5 @@ target/
 
 # Exclude hydra outputs
 /outputs/
+
+/lightning_logs/
