@@ -17,32 +17,34 @@ from omegaconf import OmegaConf
 
 import logging
 
+import yaml 
 import wandb
 
 
-@hydra.main(config_path='config', config_name='config')
-def train(config):
+def train():
     ''' load tensors from data/processed and train a network 
         defined in models.py.  At the end some figures are generated with the results'''
+    
+    # Set up hyperparameters
+    with open ('src/models/config/sweep.yaml') as file: 
+        config = yaml.load(file, Loader=yaml.FullLoader)
+    with open('src/models/config/model/FFNN.yaml') as file: 
+        model_params = yaml.load(file, Loader=yaml.FullLoader)
+    
+    run = wandb.init(config=config)
 
     log = logging.getLogger(__name__)
-    # Print loaded parameters
-    log.info(f'Training configuration:\n {OmegaConf.to_yaml(config.training)}')
-    log.info(f'Model configuration:\n {OmegaConf.to_yaml(config.model)}')
-    
-    wandb.init(entity=config.wandb.entity, project=config.wandb.project)
 
-    train_params = config.training.parameters
-    lr = train_params.lr
-    bs = train_params.batch_size
-    ep = train_params.epochs
 
-    model_params = config.model
-    in_feat = model_params.input_features
-    n_h_0 = model_params.n_hidden_0
-    n_h_1 = model_params.n_hidden_1
-    n_h_2 = model_params.n_hidden_2
-    out_feat = model_params.out_features
+    lr = wandb.config.lr
+    bs = wandb.config.batch_size
+    ep = wandb.config.epochs
+
+    in_feat = model_params['input_features']
+    n_h_0 = model_params['n_hidden_0']
+    n_h_1 = model_params['n_hidden_1']
+    n_h_2 = model_params['n_hidden_2']
+    out_feat = model_params['out_features']
 
     log.info("Starting training")
    
@@ -79,7 +81,7 @@ def train(config):
     train_loss, test_loss = [], []
     train_acc, test_acc = [], []
     for e in range(ep):
-
+        print("Start training...")
         # TRAINING
         train_curr_loss = 0
         train_preds, train_targs = [], []
@@ -111,8 +113,6 @@ def train(config):
         train_batch_acc = metrics.accuracy_score(train_targs, train_preds)
         train_acc.append(train_batch_acc)
 
-        wandb.log({'loss': train_batch_loss})
-        wandb.log({'accuracy': train_batch_acc})
 
         # VALIDATION
         test_curr_loss = 0
@@ -140,6 +140,10 @@ def train(config):
         
         log.info(f"Epoch {e+1} Train Loss =  {train_batch_loss}  Train Acc = {train_batch_acc} Test Loss  =  {test_batch_loss}  Test Acc  = {test_batch_acc}")
         log.info("--------------------------------------------------------------------------")
+        wandb.log({'train_loss': train_batch_loss, 
+                   'train_accuracy': train_batch_acc, 
+                   'test_loss': test_batch_loss, 
+                   'test_accuracy': test_batch_acc})
 
         # Save best model (lowest test loss)
         if test_batch_loss > best_test_loss: 
@@ -162,8 +166,8 @@ def train(config):
     plt.title('Accuracy')
     plt.savefig(project_dir+'reports/figures/accuracy.png')
 
-    wandb.log({'loss_plot': wandb.Image(project_dir+'reports/figures/loss.png')})
-    wandb.log({'accuracy_plot': wandb.Image(project_dir+'reports/figures/accuracy.png')})
+    wandb.log({'loss_plot': wandb.Image(project_dir+'reports/figures/loss.png'), 
+               'accuracy_plot': wandb.Image(project_dir+'reports/figures/accuracy.png')})
 
 
 

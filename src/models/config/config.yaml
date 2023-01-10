@@ -1,3 +1,4 @@
-defaults: 
+defaults:
   - training: exp1
   - model: FFNN
+  - wandb: config
