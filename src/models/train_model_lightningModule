@@ -7,16 +7,18 @@ from torchvision import transforms
 from model_lightningModule import Net
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 
+
 def train(): 
     # Define normalization
     transform = transforms.Normalize((0,), (1,))
-    # Create dataset
+    # Create training dataset
     train_dataset = MyDataset('train', 'data/processed', transform)
-    # Create data loader
+    # Create training data loader
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-    # Create dataset
+
+    # Create validation dataset
     val_dataset = MyDataset('test', 'data/processed', transform)
-    # Create data loader
+    # Create validation data loader
     val_loader = DataLoader(val_dataset, batch_size=32)
 
     # Define callback
@@ -24,11 +26,11 @@ def train():
 
  
     # Create trainer
-    trainer = pl.Trainer(max_epochs=100, accelerator="gpu", limit_train_batches=0.3, callbacks=[early_stopping_callback])
+    trainer = pl.Trainer(max_epochs=2, accelerator="gpu", limit_train_batches=1.0, callbacks=[early_stopping_callback])
     # Define model
     model = Net(784, [100, 100, 100], 10, 0.0001)
     # Train model
     trainer.fit(model, train_dataloaders=train_loader, val_dataloaders=val_loader)
-    a = 1
+    
 
 train()
