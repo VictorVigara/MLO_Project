@@ -9,7 +9,7 @@ from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 
 
 def train(): 
-    # Define normalization
+    # Define normalization ()
     transform = transforms.Normalize((0,), (1,))
     # Create training dataset
     train_dataset = MyDataset('train', 'data/processed', transform)
@@ -31,6 +31,8 @@ def train():
     model = Net(784, [100, 100, 100], 10, 0.0001)
     # Train model
     trainer.fit(model, train_dataloaders=train_loader, val_dataloaders=val_loader)
+
+    # Comentary added to check caching github actions
     
 
 train()
