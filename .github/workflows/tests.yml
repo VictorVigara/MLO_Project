@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ master, main ]
 
+runs:
+  using: 'node16'
+  main: 'main.js'
+
 jobs:
   build:
 
