@@ -1,0 +1,52 @@
+import argparse
+import os
+import sys
+
+import click
+import matplotlib.pyplot as plt
+import torch
+import torch.nn as nn
+from model_lightningModule import Net
+from sklearn import metrics
+from torch import optim
+from torch.utils.data import DataLoader, Dataset
+from torchvision import transforms
+
+from myDataset import MyDataset
+
+from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
+
+def predict_lightning():
+    print("Start model prediction")
+
+    checkpoint_path = "src/models/train_models/pytorch_lightning/lightning_logs/version_0/checkpoints/epoch=1-step=2500.ckpt"
+
+    # Load model
+    model = Net.load_from_checkpoint(checkpoint_path, n_features=784, n_hidden=[100, 100, 100], n_classes=10, lr=0.0001)
+
+    # Load test dataset
+    transform = transforms.Normalize((0,), (1,))
+    test_dataset = MyDataset('test', 'data/processed', transform)
+    # Create data loader
+    test_dataloader = DataLoader(test_dataset, batch_size=32)
+    
+    preds, target = [], []
+    # Load images and labels from dataloader
+    for images, labels in test_dataloader:
+        probs = model(images)
+        preds.append(probs.argmax(dim=-1))
+        target.append(labels.detach())
+
+    target = torch.cat(target, dim=0)
+    preds = torch.cat(preds, dim=0)
+
+    # Creat report
+    report = classification_report(target, preds)
+    with open("classification_report.txt", 'w') as outfile:
+        outfile.write(report)
+    # Obtain confussion matrix    
+    confmat = confusion_matrix(target, preds)
+    disp = ConfusionMatrixDisplay(confusion_matrix = confmat, )
+    plt.savefig('confusion_matrix.png')
+
+predict_lightning()

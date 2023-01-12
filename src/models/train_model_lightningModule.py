@@ -26,7 +26,7 @@ def train():
 
  
     # Create trainer
-    trainer = pl.Trainer(max_epochs=2, accelerator="gpu", limit_train_batches=1.0, callbacks=[early_stopping_callback])
+    trainer = pl.Trainer(max_epochs=2, accelerator="gpu", limit_train_batches=1.0, callbacks=[early_stopping_callback], default_root_dir="src/models/train_models/pytorch_lightning")
     # Define model
     model = Net(784, [100, 100, 100], 10, 0.0001)
     # Train model
