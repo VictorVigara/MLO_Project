@@ -1,7 +1,9 @@
 import sys
+
 sys.path.append('./src/models')
 import torch
 from model_lightningModule import Net
+
 
 def test_model():
     batch_size = 1

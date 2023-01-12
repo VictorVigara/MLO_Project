@@ -1,8 +1,7 @@
-import torch.nn.functional as F
-from torch import nn
-from torch import optim
 import pytorch_lightning as pl
 import torch
+import torch.nn.functional as F
+from torch import nn, optim
 
 
 class Net(pl.LightningModule):

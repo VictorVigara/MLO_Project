@@ -1,11 +1,11 @@
 import pytorch_lightning as pl
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.utils.data import DataLoader
-from myDataset import MyDataset
-from torchvision import transforms
 from model_lightningModule import Net
+from myDataset import MyDataset
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
+from torch.utils.data import DataLoader
+from torchvision import transforms
 
 
 def train(): 

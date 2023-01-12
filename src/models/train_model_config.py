@@ -1,21 +1,19 @@
 import argparse
+import logging
 import os
 import sys
 
 import click
+import hydra
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 from model import Net
+from omegaconf import OmegaConf
 from sklearn import metrics
 from torch import optim
 from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
-
-import hydra
-from omegaconf import OmegaConf
-
-import logging
 
 import wandb
 

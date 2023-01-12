@@ -1,14 +1,17 @@
 # from test import _PATH_DATA
 # print(_PATH_DATA)
 import sys
+
 sys.path.append("./src/models/")
 
 import os
+
+import pytest
 import torch
 from myDataset import MyDataset
-from torchvision import transforms
 from torch.utils.data import DataLoader
-import pytest
+from torchvision import transforms
+
 
 @pytest.mark.skipif(not os.path.exists("./data"), reason="Data files not found")
 def test_data():

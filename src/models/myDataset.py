@@ -1,6 +1,8 @@
-from torch.utils.data import Dataset
 import os
+
 import torch
+from torch.utils.data import Dataset
+
 
 class MyDataset(Dataset): 
     def __init__(self, data_type, data_dir, transform):

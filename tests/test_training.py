@@ -1,13 +1,15 @@
 import sys
+
 sys.path.append('./src/models')
+import os.path
+
+import pytest
+import pytorch_lightning as pl
+import torch
 from model_lightningModule import Net
 from myDataset import MyDataset
-import torch
-from torchvision import transforms
 from torch.utils.data import DataLoader
-import pytorch_lightning as pl
-import pytest
-import os.path
+from torchvision import transforms
 
 
 @pytest.mark.skipif(not os.path.exists("./data"), reason="Data files not found")
