@@ -22,7 +22,7 @@ jobs:
     - name: Build the Docker image
       run: |
         echo "$" | docker login \
-          -u "$" --password-stdin docker.io
+          -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin ${{ secrets.DOCKER_HUB_TOKEN}}
         docker build . --file wandb.dockerfile \
           --tag docker.io/$/$:$GITHUB_SHA
-        docker push docker.io/$/$:$GITHUB_SHA
+        docker push ${{ secrets.DOCKER_HUB_USERNAME}}/${{ secrets.DOCKER_HUB_REPOSITORY}}
