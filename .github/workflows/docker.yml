@@ -1,4 +1,4 @@
-name: "Run flake8"
+name: "Run docker"
 
 on:
   push:
@@ -19,11 +19,11 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.9
-    name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+    name: Login to Docker HubA
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_TOKEN }}
     - name: Build the Docker image
       run: |
         docker build . --file wandb.dockerfile -t wandb:latest
