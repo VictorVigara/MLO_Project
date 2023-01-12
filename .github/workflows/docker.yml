@@ -19,10 +19,12 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.9
+    name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
     - name: Build the Docker image
       run: |
-        echo "$" | docker login \
-          -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin ${{ secrets.DOCKER_HUB_TOKEN}}
-        docker build . --file wandb.dockerfile \
-          --tag docker.io/$/$:$GITHUB_SHA
+        docker build . --file wandb.dockerfile -t wandb:latest
         docker push ${{ secrets.DOCKER_HUB_USERNAME}}/${{ secrets.DOCKER_HUB_REPOSITORY}}
