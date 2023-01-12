@@ -25,7 +25,7 @@ def test_training():
     val_loader = DataLoader(val_dataset, batch_size=32)
  
     # Create trainer
-    trainer = pl.Trainer(max_epochs=1, accelerator="gpu", limit_train_batches=0.1)
+    trainer = pl.Trainer(max_epochs=1, limit_train_batches=0.1)
     # Define model
     model = Net(784, [100, 100, 100], 10, 0.0001)
     # Train model
