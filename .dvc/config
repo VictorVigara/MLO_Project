@@ -1,4 +1,6 @@
 [core]
-    remote = storage
+    remote = remote_storage
 ['remote "storage"']
     url = gdrive://1M5lp7hvaXU8ChSKb8s4pgOtWmixOuCcx
+['remote "remote_storage"']
+    url = ../datagcpmlops
