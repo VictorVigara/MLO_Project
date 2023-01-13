@@ -19,9 +19,10 @@ def cli():
 def cli():
     pass
 
-@click.command()
-@click.argument('data_path', type=click.Path(exists=True))
-@click.argument('tensors_path', type=click.Path())
+#@click.command()
+#@click.argument('data_path', type=click.Path(exists=True))
+#@click.argument('tensors_path', type=click.Path())
+
 def main(data_path, tensors_path):
     print('Transforming raw data into tensors')
     """ Runs data processing scripts to turn raw data from (../raw) into
@@ -53,8 +54,10 @@ def main(data_path, tensors_path):
     torch.save(images_test, tensors_path + '/test_images.pt')
     torch.save(labels_test, tensors_path + '/test_labels.pt')
 
-cli.add_command(main)
+#cli.add_command(main)
 
 if __name__ == '__main__':
-    cli()
-    main()
+    # #cli()
+    data_path = "./data/raw"
+    tensors_path="./data/processed"
+    main(data_path, tensors_path)
