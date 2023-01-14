@@ -14,7 +14,10 @@ COPY models/ models/
 COPY .dvc/ .dvc/
 
 WORKDIR /
-RUN pip install -r requirements.txt --no-cache-dir
+RUN pip install dvc 'dvc[gs]'
+RUN dvc init --no-scm
+RUN dvc remote add -d myremote gs://datagcpmlops/ 
 RUN dvc pull
+RUN pip install -r requirements.txt --no-cache-dir
 
 ENTRYPOINT ["python", "-u", "src/models/train_model.py"]
