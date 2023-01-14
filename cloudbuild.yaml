@@ -1,5 +1,5 @@
 steps:
    - name: 'gcr.io/cloud-builders/docker'
-     args: ['build', '-t', 'gcr.io/dtu-mlops-374512/wandb', '.']
+     args: ['build', '-t', 'gcr.io/dtu-mlops-374512/trainer', '.']
    - name: 'gcr.io/cloud-builders/docker'
-     args: ['push', 'gcr.io/dtu-mlops-374512/wandb']
+     args: ['push', 'gcr.io/dtu-mlops-374512/trainer']
