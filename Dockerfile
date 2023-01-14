@@ -11,7 +11,6 @@ COPY setup.py setup.py
 COPY src/ src/
 COPY reports/ reports/
 COPY models/ models/
-COPY .dvc/ .dvc/
 
 WORKDIR /
 RUN pip install dvc 'dvc[gs]'
