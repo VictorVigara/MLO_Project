@@ -31,8 +31,8 @@ jobs:
         restore-keys: |
           ${{ matrix.os }}-py${{ matrix.python-version }}-pt${{ matrix.pytorch-version }}-pip-
     - uses: iterative/setup-dvc@v1
-    - name: Get data
-      run: 
+    - name: Add gcp storage
+      run: | 
         dvc remote add -d remote_storage gs://datagcpmlops/
         dvc pull
       env:
