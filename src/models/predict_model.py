@@ -12,8 +12,6 @@ from torch import optim
 from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 
-import data
-
 
 @click.group()
 def cli():
