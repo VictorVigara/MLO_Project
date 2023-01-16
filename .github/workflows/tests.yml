@@ -32,7 +32,9 @@ jobs:
           ${{ matrix.os }}-py${{ matrix.python-version }}-pt${{ matrix.pytorch-version }}-pip-
     - uses: iterative/setup-dvc@v1
     - name: Get data
-      run: dvc pull
+      run: 
+        dvc remote add -d remote_storage gs://datagcpmlops/
+        dvc pull
       env:
         GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
     - name: Install dependencies
