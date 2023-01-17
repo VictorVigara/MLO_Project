@@ -36,7 +36,7 @@ jobs:
         dvc remote add -d remote_storage gs://datagcpmlops/ --force
         dvc pull
       env:
-        GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
