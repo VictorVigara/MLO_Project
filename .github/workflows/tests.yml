@@ -33,7 +33,6 @@ jobs:
     - uses: iterative/setup-dvc@v1
     - name: Add gcp storage
       run: | 
-        dvc remote add -d remote_storage gs://datagcpmlops/ --force
         dvc pull
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
